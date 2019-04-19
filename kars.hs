@@ -51,24 +51,34 @@ gushtav = UnAuto "gushtav"  200  130 "PetiLaLinda"  nitro
 rodra :: Auto
 rodra = UnAuto "rodra" 0 50 "Taisa" (fingirAmor "gushtav")
 
--- trucoFavorito rodra 
+-- Para que un auto haga su truco favorito debemos poner en consola:
+--   (trucoFavorito auto) auto
+-- Por ejemplo para que rodra haga su truco favoito:
+--   (trucoFavorito rodra) rodra
 
+nombrePalindromo :: String -> Bool
 nombrePalindromo nombre = head nombre == last nombre
 
-aumentarVelocidad nombre velocidad | nombrePalindromo nombre = velocidad + 50
-                                   | genericLength nombre <= 2 = velocidad + 15
-                                   | genericLength nombre <= 4 = velocidad + 20
-                                   | genericLength nombre > 4 = velocidad + 30
+aumentarVelocidadSegunEnamorade :: String -> Float -> Float
+aumentarVelocidadSegunEnamorade nombre velocidad | nombrePalindromo nombre = velocidad + 50
+                                                 | genericLength nombre <= 2 = velocidad + 15
+                                                 | genericLength nombre <= 4 = velocidad + 20
+                                                 | genericLength nombre > 4 = velocidad + 30
                                    
-
+incrementarVelocidad :: Auto -> Auto
 incrementarVelocidad (UnAuto nombre nivelNafta velocidad nombreEnamorade trucoFavorito ) = 
-    UnAuto nombre nivelNafta (aumentarVelocidad nombreEnamorade velocidad) nombreEnamorade trucoFavorito
+    UnAuto nombre nivelNafta (aumentarVelocidadSegunEnamorade nombreEnamorade velocidad) nombreEnamorade trucoFavorito
+
+hayNafta = (>0)
+velocidadMenor100 = (<100)
+
+puedeRealizarTruco :: Auto -> Bool
+puedeRealizarTruco  auto |  hayNafta (nivelNafta auto) && velocidadMenor100 (velocidad auto)   = True
+                         | otherwise  = False 
 
 
 
-
-
-
+                     
 
 
 

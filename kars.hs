@@ -76,6 +76,18 @@ puedeRealizarTruco :: Auto -> Bool
 puedeRealizarTruco  auto |  hayNafta (nivelNafta auto) && velocidadMenor100 (velocidad auto)   = True
                          | otherwise  = False 
 
+aumentaVelocidadSegunNafta :: Auto -> Auto                        
+aumentaVelocidadSegunNafta auto = auto {velocidad = (nivelNafta auto) *10}
+llevaNaftaA1 :: Auto -> Auto
+llevaNaftaA1 auto = auto {nivelNafta = 1 }
+
+comboLoco :: Auto -> Auto
+comboLoco = deReversa . nitro
+queTrucazo :: Auto -> Auto 
+queTrucazo = incrementarVelocidad . (fingirAmor "ana")
+turbo :: Auto -> Auto
+turbo = llevaNaftaA1 . aumentaVelocidadSegunNafta                 
+
 
 
                      

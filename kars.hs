@@ -28,8 +28,9 @@ impresionar (UnAuto nombre nivelNafta velocidad nombreEnamorade trucoFavorito) =
     UnAuto nombre  nivelNafta (aumentarPorNombre nombre velocidad) nombreEnamorade trucoFavorito
 
 nitro :: Auto -> Auto
-nitro (UnAuto nombre nivelNafta velocidad nombreEnamorade trucoFavorito) = 
-    UnAuto nombre nivelNafta (velocidad + 15)  nombreEnamorade trucoFavorito 
+nitro (UnAuto nombre nivelNafta velocidad nombreEnamorade trucoFavorito ) = 
+    UnAuto nombre nivelNafta (velocidad + 15)  nombreEnamorade trucoFavorito
+ 
     
 fingirAmor :: String -> Auto -> Auto
 fingirAmor nombreNuevoEnamorade auto = 
@@ -51,6 +52,20 @@ rodra :: Auto
 rodra = UnAuto "rodra" 0 50 "Taisa" (fingirAmor "gushtav")
 
 -- trucoFavorito rodra 
+
+nombrePalindromo nombre = head nombre == last nombre
+
+aumentarVelocidad nombre velocidad | nombrePalindromo nombre = velocidad + 50
+                                   | genericLength nombre <= 2 = velocidad + 15
+                                   | genericLength nombre <= 4 = velocidad + 20
+                                   | genericLength nombre > 4 = velocidad + 30
+                                   
+
+incrementarVelocidad (UnAuto nombre nivelNafta velocidad nombreEnamorade trucoFavorito ) = 
+    UnAuto nombre nivelNafta (aumentarVelocidad nombreEnamorade velocidad) nombreEnamorade trucoFavorito
+
+
+
 
 
 

@@ -73,11 +73,12 @@ hayNafta = (>0)
 velocidadMenor100 = (<100)
 
 puedeRealizarTruco :: Auto -> Bool
-puedeRealizarTruco  auto |  hayNafta (nivelNafta auto) && velocidadMenor100 (velocidad auto)   = True
-                         | otherwise  = False 
+puedeRealizarTruco  autoDespuesDeTruco = 
+     (hayNafta.nivelNafta) autoDespuesDeTruco && (velocidadMenor100.velocidad) autoDespuesDeTruco   
 
 aumentaVelocidadSegunNafta :: Auto -> Auto                        
 aumentaVelocidadSegunNafta auto = auto {velocidad = (nivelNafta auto) *10}
+
 llevaNaftaA1 :: Auto -> Auto
 llevaNaftaA1 auto = auto {nivelNafta = 1 }
 

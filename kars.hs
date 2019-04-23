@@ -19,28 +19,22 @@ data Auto = UnAuto {
     trucoFavorito :: Truco
 } deriving (Show)
 
-
 aumentarPorNombre :: Nombre -> Velocidad -> Velocidad
 aumentarPorNombre nombre velocidad = velocidad + genericLength nombre
 
 impresionar :: Auto -> Auto
-impresionar (UnAuto nombre nivelNafta velocidad nombreEnamorade trucoFavorito) =
-    UnAuto nombre  nivelNafta (aumentarPorNombre nombre velocidad) nombreEnamorade trucoFavorito
+impresionar auto = auto {velocidad = (aumentarPorNombre (nombre auto) (velocidad auto)) }
 
 nitro :: Auto -> Auto
-nitro (UnAuto nombre nivelNafta velocidad nombreEnamorade trucoFavorito ) = 
-    UnAuto nombre nivelNafta (velocidad + 15)  nombreEnamorade trucoFavorito
- 
+nitro auto = auto {velocidad = velocidad auto + 15}
     
 fingirAmor :: String -> Auto -> Auto
-fingirAmor nombreNuevoEnamorade auto = 
-   auto {nombreEnamorade = nombreNuevoEnamorade}
+fingirAmor nombreNuevoEnamorade auto =  auto {nombreEnamorade = nombreNuevoEnamorade}
 
 pista = 1000
 
 deReversa :: Auto -> Auto
-deReversa (UnAuto nombre  nivelNafta velocidad nombreEnamorade trucoFavorito) =
-    UnAuto nombre (nivelNafta + pista/5) velocidad nombreEnamorade trucoFavorito 
+deReversa auto = auto {velocidad = nivelNafta auto + pista/5}
 
 rochaMcQueen :: Auto
 rochaMcQueen = UnAuto "rochaMcQueen" 300 0 "Ronco"  deReversa
@@ -57,24 +51,22 @@ rodra = UnAuto "rodra" 0 50 "Taisa" (fingirAmor "gushtav")
 --   (trucoFavorito rodra) rodra
 
 nombrePalindromo :: String -> Bool
-nombrePalindromo nombre = head nombre == last nombre
+nombrePalindromo nombre = nombre == reverse nombre
 
 aumentarVelocidadSegunEnamorade :: String -> Float -> Float
 aumentarVelocidadSegunEnamorade nombre velocidad | nombrePalindromo nombre = velocidad + 50
                                                  | genericLength nombre <= 2 = velocidad + 15
                                                  | genericLength nombre <= 4 = velocidad + 20
-                                                 | genericLength nombre > 4 = velocidad + 30
+                                                 | otherwise = velocidad + 30
                                    
 incrementarVelocidad :: Auto -> Auto
-incrementarVelocidad (UnAuto nombre nivelNafta velocidad nombreEnamorade trucoFavorito ) = 
-    UnAuto nombre nivelNafta (aumentarVelocidadSegunEnamorade nombreEnamorade velocidad) nombreEnamorade trucoFavorito
+incrementarVelocidad auto = auto {velocidad = aumentarVelocidadSegunEnamorade (nombreEnamorade auto) (velocidad auto)}
 
 hayNafta = (>0)
 velocidadMenor100 = (<100)
 
 puedeRealizarTruco :: Auto -> Bool
-puedeRealizarTruco  autoDespuesDeTruco = 
-     (hayNafta.nivelNafta) autoDespuesDeTruco && (velocidadMenor100.velocidad) autoDespuesDeTruco   
+puedeRealizarTruco  autoDespuesDeTruco = (hayNafta.nivelNafta) autoDespuesDeTruco && (velocidadMenor100.velocidad) autoDespuesDeTruco   
 
 aumentaVelocidadSegunNafta :: Auto -> Auto                        
 aumentaVelocidadSegunNafta auto = auto {velocidad = (nivelNafta auto) *10}
@@ -84,8 +76,10 @@ llevaNaftaA1 auto = auto {nivelNafta = 1 }
 
 comboLoco :: Auto -> Auto
 comboLoco = deReversa . nitro
+
 queTrucazo :: Auto -> Auto 
 queTrucazo = incrementarVelocidad . (fingirAmor "ana")
+
 turbo :: Auto -> Auto
 turbo = llevaNaftaA1 . aumentaVelocidadSegunNafta                 
 

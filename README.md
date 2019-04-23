@@ -6,8 +6,8 @@ TP Integrador Funcional 2019 - Karrrs
 
 (la parte 2 estará accesible más adelante)
 
-## Grupo:
+## Grupo: Inaudito
 
 ## Integrantes:
-   - ?
-   - ?
+   - Leandro Daniel Escalante
+   - Juan Mercurio Badii

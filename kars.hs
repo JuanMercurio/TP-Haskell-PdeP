@@ -11,6 +11,21 @@ type NivelNafta = Float
 type NombreEnamorade = String
 type Truco = Auto -> Auto
 type TamanioTanque = Float
+type CantidadVueltas = Float
+type LongitudPista = Float
+type Publico = [NombresPublico]
+type Trampa = Carrera -> Carrera
+type Participantes = [Auto]
+
+data NombresPublico =  Ronco | Tinch | Dodain deriving(Show)
+
+data Carrera = CrearCarrera {
+    cantidadVueltas :: CantidadVueltas,
+    longitudPista :: LongitudPista,
+    publico :: Publico,
+    trampa :: Trampa,
+    participantes :: Participantes
+} deriving (Show)
 
 data Auto = UnAuto {
     nombre :: Nombre, 
@@ -83,7 +98,13 @@ queTrucazo :: Auto -> Auto
 queTrucazo = incrementarVelocidad . (fingirAmor "ana")
 
 turbo :: Auto -> Auto
-turbo = llevaNaftaA1 . aumentaVelocidadSegunNafta                 
+turbo = llevaNaftaA1 . aumentaVelocidadSegunNafta      
+
+potreroFunes :: Carrera
+potreroFunes = CrearCarrera 3 5 [Ronco, Tinch, Dodain] sacarUno [rochaMcQueen, biankerr, rodra] 
+
+sacarUno :: Carrera -> Carrera
+sacarUno carrera = carrera { participantes = tail (participantes carrera)}
 
 
 

@@ -10,13 +10,15 @@ type Velocidad = Float
 type NivelNafta = Float 
 type NombreEnamorade = String
 type Truco = Auto -> Auto
+type TamanioTanque = Float
 
 data Auto = UnAuto {
     nombre :: Nombre, 
     nivelNafta :: NivelNafta,
     velocidad :: Velocidad,
     nombreEnamorade :: NombreEnamorade,
-    trucoFavorito :: Truco
+    trucoFavorito :: Truco,
+    tamanioTanque :: TamanioTanque
 } deriving (Show)
 
 aumentarPorNombre :: Nombre -> Velocidad -> Velocidad
@@ -37,13 +39,13 @@ deReversa :: Auto -> Auto
 deReversa auto = auto { nivelNafta = nivelNafta auto + (velocidad auto) / 5}
 
 rochaMcQueen :: Auto
-rochaMcQueen = UnAuto "rochaMcQueen" 300 0 "Ronco"  deReversa
+rochaMcQueen = UnAuto "rochaMcQueen" 300 0 "Ronco"  deReversa 1000
 biankerr :: Auto
-biankerr = UnAuto  "biankerr" 500 20 "Tinch"  impresionar
+biankerr = UnAuto  "biankerr" 500 20 "Tinch"  impresionar 1000
 gushtav :: Auto
-gushtav = UnAuto "gushtav"  200  130 "PetiLaLinda"  nitro
+gushtav = UnAuto "gushtav"  200  130 "PetiLaLinda"  nitro 300
 rodra :: Auto
-rodra = UnAuto "rodra" 0 50 "Taisa" (fingirAmor "gushtav")
+rodra = UnAuto "rodra" 0 50 "Taisa" (fingirAmor "gushtav") 300 
 
 -- Para que un auto haga su truco favorito debemos poner en consola:
 --   (trucoFavorito auto) auto

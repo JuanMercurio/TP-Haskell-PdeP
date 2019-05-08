@@ -70,14 +70,21 @@ rodra = UnAuto "rodra" 0 50 "Taisa" (fingirAmor "gushtav") 300
 nombrePalindromo :: String -> Bool
 nombrePalindromo nombre = nombre == reverse nombre
 
-aumentarVelocidadSegunEnamorade :: String -> Float -> Float
-aumentarVelocidadSegunEnamorade nombre velocidad | nombrePalindromo nombre = velocidad + 50
+velocidadSegunEnamorade :: String  -> Float
+{-aumentarVelocidadSegunEnamorade nombre velocidad | nombrePalindromo nombre = velocidad + 50
                                                  | genericLength nombre <= 2 = velocidad + 15
                                                  | genericLength nombre <= 4 = velocidad + 20
                                                  | otherwise = velocidad + 30
-                                   
-incrementarVelocidad :: Auto -> Auto
-incrementarVelocidad auto = auto {velocidad = aumentarVelocidadSegunEnamorade (nombreEnamorade auto) (velocidad auto)}
+-}
+
+velocidadSegunEnamorade nombre | nombrePalindromo nombre = 50
+                                       | genericLength nombre <= 2 =  15
+                                       | genericLength nombre <= 4 =   20
+                                       | otherwise =   30
+
+incrementarVelocidadEnamorade :: Auto -> Auto
+--incrementarVelocidad auto = auto {velocidad = velocidadSegunEnamorade (nombreEnamorade auto) (velocidad auto)}
+incrementarVelocidadEnamorade auto = cambiarVelocidad (velocidadSegunEnamorade (nombre auto)) auto
 
 hayNafta = (>0)
 velocidadMenor100 = (<100)
@@ -86,7 +93,8 @@ puedeRealizarTruco :: Auto -> Bool
 puedeRealizarTruco  autoDespuesDeTruco = (hayNafta.nivelNafta) autoDespuesDeTruco && (velocidadMenor100.velocidad) autoDespuesDeTruco   
 
 aumentaVelocidadSegunNafta :: Auto -> Auto                        
-aumentaVelocidadSegunNafta auto = auto {velocidad = (nivelNafta auto) *10}
+--aumentaVelocidadSegunNafta auto = auto {velocidad = (nivelNafta auto) *10}
+aumentaVelocidadSegunNafta auto = cambiarVelocidad (nivelNafta auto * 10) auto
 
 llevaNaftaA1 :: Auto -> Auto
 llevaNaftaA1 auto = auto {nivelNafta = 1 }
@@ -95,7 +103,7 @@ comboLoco :: Auto -> Auto
 comboLoco = deReversa . nitro
 
 queTrucazo :: Auto -> Auto 
-queTrucazo = incrementarVelocidad . (fingirAmor "ana")
+queTrucazo = incrementarVelocidadEnamorade . (fingirAmor "ana")
 
 turbo :: Auto -> Auto
 turbo = llevaNaftaA1 . aumentaVelocidadSegunNafta  

@@ -98,7 +98,10 @@ queTrucazo :: Auto -> Auto
 queTrucazo = incrementarVelocidad . (fingirAmor "ana")
 
 turbo :: Auto -> Auto
-turbo = llevaNaftaA1 . aumentaVelocidadSegunNafta      
+turbo = llevaNaftaA1 . aumentaVelocidadSegunNafta  
+
+inutilidad :: Auto -> Auto
+inutilidad auto = auto
 
 potreroFunes :: Carrera
 potreroFunes = CrearCarrera 3 5 [Ronco, Tinch, Dodain] sacarUno [rochaMcQueen, biankerr, rodra] 
@@ -114,6 +117,21 @@ cambiarVelocidadEnLista  velocidadACambiar participantes = map (cambiarVelocidad
 
 cambiarVelocidad :: Velocidad -> Auto -> Auto
 cambiarVelocidad velocidadACambiar auto = auto { velocidad = velocidad auto + velocidadACambiar}
+
+neutralizarTrucos :: Carrera -> Carrera 
+neutralizarTrucos carrera = carrera { participantes = map neutralizar (participantes carrera)}
+
+neutralizar :: Auto -> Auto
+neutralizar auto = auto { trucoFavorito = inutilidad}
+
+pocaReserva :: Carrera -> Carrera
+pocaReserva carrera = carrera { participantes = tieneNaftaLista 30 (participantes carrera)}
+
+tieneNaftaLista :: NivelNafta -> Participantes -> Participantes 
+tieneNaftaLista nivelNaftaNecesario participantes = filter (tieneNafta nivelNaftaNecesario) participantes
+
+tieneNafta :: NivelNafta -> Auto -> Bool
+tieneNafta nivelNaftaNecesario  auto = (nivelNafta auto) >= nivelNaftaNecesario
 
 
 

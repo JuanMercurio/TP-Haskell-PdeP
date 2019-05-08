@@ -31,10 +31,10 @@ nitro auto = auto {velocidad = velocidad auto + 15}
 fingirAmor :: String -> Auto -> Auto
 fingirAmor nombreNuevoEnamorade auto =  auto {nombreEnamorade = nombreNuevoEnamorade}
 
-pista = 1000
+
 
 deReversa :: Auto -> Auto
-deReversa auto = auto {velocidad = nivelNafta auto + pista/5}
+deReversa auto = auto { nivelNafta = nivelNafta auto + (velocidad auto) / 5}
 
 rochaMcQueen :: Auto
 rochaMcQueen = UnAuto "rochaMcQueen" 300 0 "Ronco"  deReversa

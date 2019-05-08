@@ -106,6 +106,17 @@ potreroFunes = CrearCarrera 3 5 [Ronco, Tinch, Dodain] sacarUno [rochaMcQueen, b
 sacarUno :: Carrera -> Carrera
 sacarUno carrera = carrera { participantes = tail (participantes carrera)}
 
+lluvia :: Carrera -> Carrera 
+lluvia carrera = carrera  { participantes = cambiarVelocidadEnLista (-10) (participantes carrera)}
+
+cambiarVelocidadEnLista :: Velocidad -> Participantes -> Participantes 
+cambiarVelocidadEnLista  velocidadACambiar participantes = map (cambiarVelocidad velocidadACambiar) participantes
+
+cambiarVelocidad :: Velocidad -> Auto -> Auto
+cambiarVelocidad velocidadACambiar auto = auto { velocidad = velocidad auto + velocidadACambiar}
+
+
+
 
 
                      

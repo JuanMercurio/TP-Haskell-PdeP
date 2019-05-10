@@ -48,8 +48,6 @@ nitro auto = auto {velocidad = velocidad auto + 15}
 fingirAmor :: String -> Auto -> Auto
 fingirAmor nombreNuevoEnamorade auto =  auto {nombreEnamorade = nombreNuevoEnamorade}
 
-
-
 deReversa :: Auto -> Auto
 deReversa auto = auto { nivelNafta = nivelNafta auto + (velocidad auto) / 5}
 
@@ -103,6 +101,17 @@ turbo = llevaNaftaA1 . aumentaVelocidadSegunNafta
 inutilidad :: Auto -> Auto
 inutilidad auto = auto
 
+llenarTanque :: Auto -> Auto
+llenarTanque auto = auto { nivelNafta = tamanioTanque auto }
+
+elGranTruco :: [Truco] -> Auto -> Auto
+elGranTruco [] auto = auto
+elGranTruco (x:xs) auto = elGranTruco xs ( x auto )    
+
+multiNitro :: Float -> Auto -> Auto
+multiNitro 0 auto = auto
+multiNitro cantidad auto = multiNitro (cantidad - 1) (nitro auto)
+
 potreroFunes :: Carrera
 potreroFunes = CrearCarrera 3 5 [Ronco, Tinch, Dodain] sacarUno [rochaMcQueen, biankerr, rodra] 
 
@@ -132,6 +141,7 @@ tieneNaftaLista nivelNaftaNecesario participantes = filter (tieneNafta nivelNaft
 
 tieneNafta :: NivelNafta -> Auto -> Bool
 tieneNafta nivelNaftaNecesario  auto = (nivelNafta auto) >= nivelNaftaNecesario
+
 
 
 

@@ -13,7 +13,7 @@ type Truco = Auto -> Auto
 type TamanioTanque = Float
 type CantidadVueltas = Float
 type LongitudPista = Float
-type Publico = [NombresPublico]
+type Publico = [String]
 type Trampa = Carrera -> Carrera
 type Participantes = [Auto]
 
@@ -113,7 +113,7 @@ multiNitro 0 auto = auto
 multiNitro cantidad auto = multiNitro (cantidad - 1) (nitro auto)
 
 potreroFunes :: Carrera
-potreroFunes = CrearCarrera 3 5 [Ronco, Tinch, Dodain] sacarUno [rochaMcQueen, biankerr, rodra] 
+potreroFunes = CrearCarrera 3 5 ["Ronco", "Tinch", "Dodain"] sacarUno [rochaMcQueen, biankerr, rodra] 
 
 sacarUno :: Carrera -> Carrera
 sacarUno carrera = carrera { participantes = tail (participantes carrera)}
@@ -140,8 +140,37 @@ tieneNaftaLista :: NivelNafta -> Participantes -> Participantes
 tieneNaftaLista nivelNaftaNecesario participantes = filter (tieneNafta nivelNaftaNecesario) participantes
 
 tieneNafta :: NivelNafta -> Auto -> Bool
-tieneNafta nivelNaftaNecesario  auto = (nivelNafta auto) >= nivelNaftaNecesario
+tieneNafta nivelNaftaNecesario  auto = nivelNafta auto >= nivelNaftaNecesario
 
+darVuelta :: Carrera -> Carrera
+darVuelta  carrera =( (trampa carrera).estaEnamorade.autosRestanCombustible )carrera
+ 
+autosDanVuelta :: LongitudPista -> Participantes -> Participantes
+autosDanVuelta longitud participantes = map (restarCombustible longitud ) participantes
+
+restarCombustible ::LongitudPista -> Auto -> Auto
+restarCombustible longitud auto = auto {nivelNafta = max 0 (nivelNafta auto - longitud / 10 *velocidad auto)} 
+
+autosRestanCombustible :: Carrera -> Carrera
+autosRestanCombustible carrera = 
+    carrera { participantes = autosDanVuelta (longitudPista carrera) (participantes carrera)}
+
+estaEnamorade :: Carrera -> Carrera
+estaEnamorade carrera =
+     carrera { participantes = hacerTrucosSiEnamoradesEsta (publico carrera) (participantes carrera)}
+
+hacerTrucosSiEnamoradesEsta :: Publico -> Participantes -> Participantes
+hacerTrucosSiEnamoradesEsta enamorades participantes = map (buscarYCambiar enamorades) participantes
+
+buscarYCambiar :: Publico -> Auto -> Auto
+buscarYCambiar publico auto | any (==nombreEnamorade auto) publico = (trucoFavorito auto) auto
+                            | otherwise = auto
+
+{-correrCarrera :: Carrera -> Carrera
+correrCarrera carrera | cantidadVueltas carrera > 0 = correrCarrera (darVuelta carrera)
+                      | otherwise = carrera
+-}
+                    
 
 
 

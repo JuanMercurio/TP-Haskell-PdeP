@@ -65,6 +65,8 @@ rodra = UnAuto "rodra" 0 50 "Taisa" (fingirAmor "gushtav") 300
 -- Por ejemplo para que rodra haga su truco favoito:
 --   (trucoFavorito rodra) rodra
 
+realizaTrucoFavorito auto =  (trucoFavorito auto) auto
+
 nombrePalindromo :: String -> Bool
 nombrePalindromo nombre = nombre == reverse nombre
 
@@ -113,7 +115,7 @@ multiNitro 0 auto = auto
 multiNitro cantidad auto = multiNitro (cantidad - 1) (nitro auto)
 
 potreroFunes :: Carrera
-potreroFunes = CrearCarrera 3 5 ["Ronco", "Tinch", "Dodain"] sacarUno [rochaMcQueen, biankerr, rodra] 
+potreroFunes = CrearCarrera 3 5 ["Ronco", "Tinch", "Dodain"] sacarUno [rochaMcQueen, biankerr,gushtav, rodra] 
 
 sacarUno :: Carrera -> Carrera
 sacarUno carrera = carrera { participantes = tail (participantes carrera)}
@@ -143,7 +145,7 @@ tieneNafta :: NivelNafta -> Auto -> Bool
 tieneNafta nivelNaftaNecesario  auto = nivelNafta auto >= nivelNaftaNecesario
 
 darVuelta :: Carrera -> Carrera
-darVuelta  carrera =( (trampa carrera).estaEnamorade.autosRestanCombustible )carrera
+darVuelta  carrera =( restar1Vuelta.(trampa carrera).estaEnamorade.autosRestanCombustible )carrera
  
 autosDanVuelta :: LongitudPista -> Participantes -> Participantes
 autosDanVuelta longitud participantes = map (restarCombustible longitud ) participantes
@@ -160,16 +162,33 @@ estaEnamorade carrera =
      carrera { participantes = hacerTrucosSiEnamoradesEsta (publico carrera) (participantes carrera)}
 
 hacerTrucosSiEnamoradesEsta :: Publico -> Participantes -> Participantes
-hacerTrucosSiEnamoradesEsta enamorades participantes = map (buscarYCambiar enamorades) participantes
+hacerTrucosSiEnamoradesEsta enamorades participantes = map (cambiarSiEstaEnamorade enamorades) participantes
 
-buscarYCambiar :: Publico -> Auto -> Auto
-buscarYCambiar publico auto | any (==nombreEnamorade auto) publico = (trucoFavorito auto) auto
+cambiarSiEstaEnamorade :: Publico -> Auto -> Auto
+cambiarSiEstaEnamorade publico auto | any (==nombreEnamorade auto) publico = (trucoFavorito auto) auto
                             | otherwise = auto
 
-{-correrCarrera :: Carrera -> Carrera
+correrCarrera :: Carrera -> Carrera
 correrCarrera carrera | cantidadVueltas carrera > 0 = correrCarrera (darVuelta carrera)
                       | otherwise = carrera
--}
+
+restar1Vuelta :: Carrera -> Carrera
+restar1Vuelta carrera = carrera { cantidadVueltas = cantidadVueltas carrera - 1}
+
+quienGana :: Carrera -> Auto
+quienGana  = autoGanador . correrCarrera
+
+autoGanador :: Carrera -> Auto
+autoGanador carrera = participanteConMasVelocidad (participantes carrera)
+
+participanteConMasVelocidad :: Participantes -> Auto
+participanteConMasVelocidad (x:xs) = foldl autoMasRapido x xs
+
+autoMasRapido :: Auto -> Auto -> Auto 
+autoMasRapido auto1 auto2 | velocidad auto1 > velocidad auto2 = auto1
+                          | otherwise = auto2
+
+
                     
 
 

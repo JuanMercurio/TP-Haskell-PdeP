@@ -34,7 +34,7 @@ data Auto = UnAuto {
     nombreEnamorade :: NombreEnamorade,
     trucoFavorito :: Truco,
     tamanioTanque :: TamanioTanque
-} deriving (Show)
+} deriving Show
 
 aumentarPorNombre :: Nombre -> Velocidad -> Velocidad
 aumentarPorNombre nombre velocidad = velocidad + genericLength nombre
@@ -67,6 +67,9 @@ rodra = UnAuto "rodra" 0 50 "Taisa" (fingirAmor "gushtav") 300
 
 realizaTrucoFavorito auto =  (trucoFavorito auto) auto
 
+cambiarVelocidad :: Velocidad -> Auto -> Auto
+cambiarVelocidad velocidadACambiar auto = auto { velocidad = velocidad auto + velocidadACambiar}
+
 nombrePalindromo :: String -> Bool
 nombrePalindromo nombre = nombre == reverse nombre
 
@@ -91,6 +94,8 @@ aumentaVelocidadSegunNafta auto = cambiarVelocidad (nivelNafta auto * 10) auto
 llevaNaftaA1 :: Auto -> Auto
 llevaNaftaA1 auto = auto {nivelNafta = 1 }
 
+-- Trucos
+
 comboLoco :: Auto -> Auto
 comboLoco = deReversa . nitro
 
@@ -113,9 +118,13 @@ elGranTruco (x:xs) auto = elGranTruco xs ( x auto )
 multiNitro :: Float -> Auto -> Auto
 multiNitro 0 auto = auto
 multiNitro cantidad auto = multiNitro (cantidad - 1) (nitro auto)
+ 
+-- Carreras
 
 potreroFunes :: Carrera
 potreroFunes = CrearCarrera 3 5 ["Ronco", "Tinch", "Dodain"] sacarUno [rochaMcQueen, biankerr,gushtav, rodra] 
+
+--Trampas
 
 sacarUno :: Carrera -> Carrera
 sacarUno carrera = carrera { participantes = tail (participantes carrera)}
@@ -125,9 +134,6 @@ lluvia carrera = carrera  { participantes = cambiarVelocidadEnLista (-10) (parti
 
 cambiarVelocidadEnLista :: Velocidad -> Participantes -> Participantes 
 cambiarVelocidadEnLista  velocidadACambiar participantes = map (cambiarVelocidad velocidadACambiar) participantes
-
-cambiarVelocidad :: Velocidad -> Auto -> Auto
-cambiarVelocidad velocidadACambiar auto = auto { velocidad = velocidad auto + velocidadACambiar}
 
 neutralizarTrucos :: Carrera -> Carrera 
 neutralizarTrucos carrera = carrera { participantes = map neutralizar (participantes carrera)}
@@ -144,8 +150,10 @@ tieneNaftaLista nivelNaftaNecesario participantes = filter (tieneNafta nivelNaft
 tieneNafta :: NivelNafta -> Auto -> Bool
 tieneNafta nivelNaftaNecesario  auto = nivelNafta auto >= nivelNaftaNecesario
 
+-- Punto 4
+
 darVuelta :: Carrera -> Carrera
-darVuelta  carrera =( restar1Vuelta.(trampa carrera).estaEnamorade.autosRestanCombustible )carrera
+darVuelta  carrera =( restar1Vuelta . (trampa carrera) . estaEnamorade . autosRestanCombustible )carrera
  
 autosDanVuelta :: LongitudPista -> Participantes -> Participantes
 autosDanVuelta longitud participantes = map (restarCombustible longitud ) participantes
@@ -175,6 +183,8 @@ correrCarrera carrera | cantidadVueltas carrera > 0 = correrCarrera (darVuelta c
 restar1Vuelta :: Carrera -> Carrera
 restar1Vuelta carrera = carrera { cantidadVueltas = cantidadVueltas carrera - 1}
 
+-- Punto 5
+
 quienGana :: Carrera -> Auto
 quienGana  = autoGanador . correrCarrera
 
@@ -188,6 +198,23 @@ autoMasRapido :: Auto -> Auto -> Auto
 autoMasRapido auto1 auto2 | velocidad auto1 > velocidad auto2 = auto1
                           | otherwise = auto2
 
+ {- Punto 6 no se puede porque 
+ estariamos comparando infinitamente -}
+
+
+ 
+-- Algunas funciones para testeo de Casos A Prueba
+autoParticipa :: Auto -> Carrera -> Bool                          
+autoParticipa auto carrera = any (autoEsta auto) (participantes carrera)
+autoEsta :: Auto -> Auto -> Bool
+autoEsta auto1 auto2 = nombre auto1 == nombre auto2
+soloRodra participantes = length participantes == 1 && nombre ( participantes !! 0 ) == "rodra"
+
+
+
+
+
+                    
 
                     
 

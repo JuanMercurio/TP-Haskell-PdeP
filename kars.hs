@@ -17,8 +17,6 @@ type Publico = [String]
 type Trampa = Carrera -> Carrera
 type Participantes = [Auto]
 
-data NombresPublico =  Ronco | Tinch | Dodain deriving(Show)
-
 data Carrera = CrearCarrera {
     cantidadVueltas :: CantidadVueltas,
     longitudPista :: LongitudPista,
@@ -133,7 +131,7 @@ lluvia :: Carrera -> Carrera
 lluvia carrera = carrera  { participantes = cambiarVelocidadEnLista (-10) (participantes carrera)}
 
 cambiarVelocidadEnLista :: Velocidad -> Participantes -> Participantes 
-cambiarVelocidadEnLista  velocidadACambiar participantes = map (cambiarVelocidad velocidadACambiar) participantes
+cambiarVelocidadEnLista  velocidadACambiar  = map (cambiarVelocidad velocidadACambiar) 
 
 neutralizarTrucos :: Carrera -> Carrera 
 neutralizarTrucos carrera = carrera { participantes = map neutralizar (participantes carrera)}
@@ -145,7 +143,7 @@ pocaReserva :: Carrera -> Carrera
 pocaReserva carrera = carrera { participantes = tieneNaftaLista 30 (participantes carrera)}
 
 tieneNaftaLista :: NivelNafta -> Participantes -> Participantes 
-tieneNaftaLista nivelNaftaNecesario participantes = filter (tieneNafta nivelNaftaNecesario) participantes
+tieneNaftaLista nivelNaftaNecesario  = filter (tieneNafta nivelNaftaNecesario) 
 
 tieneNafta :: NivelNafta -> Auto -> Bool
 tieneNafta nivelNaftaNecesario  auto = nivelNafta auto >= nivelNaftaNecesario
@@ -153,10 +151,10 @@ tieneNafta nivelNaftaNecesario  auto = nivelNafta auto >= nivelNaftaNecesario
 -- Punto 4
 
 darVuelta :: Carrera -> Carrera
-darVuelta  carrera =( restar1Vuelta . (trampa carrera) . estaEnamorade . autosRestanCombustible )carrera
+darVuelta  carrera = (restar1Vuelta . (trampa carrera) . estaEnamorade . autosRestanCombustible) carrera
  
 autosDanVuelta :: LongitudPista -> Participantes -> Participantes
-autosDanVuelta longitud participantes = map (restarCombustible longitud ) participantes
+autosDanVuelta longitud participantes = map (restarCombustible longitud) participantes
 
 restarCombustible ::LongitudPista -> Auto -> Auto
 restarCombustible longitud auto = auto {nivelNafta = max 0 (nivelNafta auto - longitud / 10 *velocidad auto)} 
@@ -170,11 +168,11 @@ estaEnamorade carrera =
      carrera { participantes = hacerTrucosSiEnamoradesEsta (publico carrera) (participantes carrera)}
 
 hacerTrucosSiEnamoradesEsta :: Publico -> Participantes -> Participantes
-hacerTrucosSiEnamoradesEsta enamorades participantes = map (cambiarSiEstaEnamorade enamorades) participantes
+hacerTrucosSiEnamoradesEsta enamorades  = map (cambiarSiEstaEnamorade enamorades) 
 
 cambiarSiEstaEnamorade :: Publico -> Auto -> Auto
 cambiarSiEstaEnamorade publico auto | any (==nombreEnamorade auto) publico = (trucoFavorito auto) auto
-                            | otherwise = auto
+                                    | otherwise = auto
 
 correrCarrera :: Carrera -> Carrera
 correrCarrera carrera | cantidadVueltas carrera > 0 = correrCarrera (darVuelta carrera)
@@ -197,6 +195,7 @@ participanteConMasVelocidad (x:xs) = foldl autoMasRapido x xs
 autoMasRapido :: Auto -> Auto -> Auto 
 autoMasRapido auto1 auto2 | velocidad auto1 > velocidad auto2 = auto1
                           | otherwise = auto2
+
 
  {- Punto 6 no se puede porque 
  estariamos comparando infinitamente -}

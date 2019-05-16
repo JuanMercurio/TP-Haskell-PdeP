@@ -34,21 +34,6 @@ data Auto = UnAuto {
     tamanioTanque :: TamanioTanque
 } deriving Show
 
-aumentarPorNombre :: Nombre -> Velocidad -> Velocidad
-aumentarPorNombre nombre velocidad = velocidad + genericLength nombre
-
-impresionar :: Auto -> Auto
-impresionar auto = auto {velocidad = (aumentarPorNombre (nombre auto) (velocidad auto)) }
-
-nitro :: Auto -> Auto
-nitro auto = auto {velocidad = velocidad auto + 15}
-    
-fingirAmor :: String -> Auto -> Auto
-fingirAmor nombreNuevoEnamorade auto =  auto {nombreEnamorade = nombreNuevoEnamorade}
-
-deReversa :: Auto -> Auto
-deReversa auto = auto { nivelNafta = nivelNafta auto + (velocidad auto) / 5}
-
 rochaMcQueen :: Auto
 rochaMcQueen = UnAuto "rochaMcQueen" 300 0 "Ronco"  deReversa 1000
 biankerr :: Auto
@@ -78,7 +63,7 @@ velocidadSegunEnamorade nombre | nombrePalindromo nombre = 50
                                | otherwise =   30
 
 incrementarVelocidadEnamorade :: Auto -> Auto
-incrementarVelocidadEnamorade auto = cambiarVelocidad (velocidadSegunEnamorade (nombre auto)) auto
+incrementarVelocidadEnamorade auto = cambiarVelocidad ((velocidadSegunEnamorade . nombreEnamorade) auto) auto
 
 hayNafta = (>0)
 velocidadMenor100 = (<100)
@@ -93,6 +78,21 @@ llevaNaftaA1 :: Auto -> Auto
 llevaNaftaA1 auto = auto {nivelNafta = 1 }
 
 -- Trucos
+
+aumentarPorNombre :: Nombre -> Velocidad -> Velocidad
+aumentarPorNombre nombre velocidad = velocidad + genericLength nombre
+
+impresionar :: Auto -> Auto
+impresionar auto = auto {velocidad = (aumentarPorNombre (nombre auto) (velocidad auto)) }
+
+nitro :: Auto -> Auto
+nitro auto = auto {velocidad = velocidad auto + 15}
+    
+fingirAmor :: String -> Auto -> Auto
+fingirAmor nombreNuevoEnamorade auto =  auto {nombreEnamorade = nombreNuevoEnamorade}
+
+deReversa :: Auto -> Auto
+deReversa auto = auto { nivelNafta = nivelNafta auto + (velocidad auto) / 5}
 
 comboLoco :: Auto -> Auto
 comboLoco = deReversa . nitro
@@ -157,7 +157,10 @@ autosDanVuelta :: LongitudPista -> Participantes -> Participantes
 autosDanVuelta longitud participantes = map (restarCombustible longitud) participantes
 
 restarCombustible ::LongitudPista -> Auto -> Auto
-restarCombustible longitud auto = auto {nivelNafta = max 0 (nivelNafta auto - longitud / 10 *velocidad auto)} 
+restarCombustible longitud auto = auto {nivelNafta = max 0 (consumoNafta longitud auto)} 
+
+consumoNafta :: Float -> Auto -> NivelNafta
+consumoNafta longitud auto = (nivelNafta auto) - longitud / 10 * (velocidad auto)
 
 autosRestanCombustible :: Carrera -> Carrera
 autosRestanCombustible carrera = 

@@ -110,12 +110,17 @@ llenarTanque :: Auto -> Auto
 llenarTanque auto = auto { nivelNafta = tamanioTanque auto }
 
 elGranTruco :: [Truco] -> Auto -> Auto
-elGranTruco [] auto = auto
-elGranTruco (x:xs) auto = elGranTruco xs ( x auto )    
+{-elGranTruco [] auto = auto
+elGranTruco (x:xs) auto = elGranTruco xs ( x auto ) -}
+elGranTruco lista auto = foldl aplicarFuncion auto lista
 
-multiNitro :: Float -> Auto -> Auto
-multiNitro 0 auto = auto
-multiNitro cantidad auto = multiNitro (cantidad - 1) (nitro auto)
+aplicarFuncion :: Auto -> Truco -> Auto
+aplicarFuncion auto funcion = funcion auto
+
+multiNitro :: Int -> Auto -> Auto
+{-multiNitro 0 auto = auto
+multiNitro cantidad auto = multiNitro (cantidad - 1) (nitro auto) -}
+multiNitro cantidad = (elGranTruco.(replicate cantidad)) nitro 
  
 -- Carreras
 
@@ -151,10 +156,10 @@ tieneNafta nivelNaftaNecesario  auto = nivelNafta auto >= nivelNaftaNecesario
 -- Punto 4
 
 darVuelta :: Carrera -> Carrera
-darVuelta  carrera = (restar1Vuelta . (trampa carrera) . estaEnamorade . autosRestanCombustible) carrera
+darVuelta  carrera = (restar1Vuelta . (trampa carrera) . enamorar . autosRestanCombustible) carrera
  
 autosDanVuelta :: LongitudPista -> Participantes -> Participantes
-autosDanVuelta longitud participantes = map (restarCombustible longitud) participantes
+autosDanVuelta longitud  = map (restarCombustible longitud) 
 
 restarCombustible ::LongitudPista -> Auto -> Auto
 restarCombustible longitud auto = auto {nivelNafta = max 0 (consumoNafta longitud auto)} 
@@ -166,15 +171,15 @@ autosRestanCombustible :: Carrera -> Carrera
 autosRestanCombustible carrera = 
     carrera { participantes = autosDanVuelta (longitudPista carrera) (participantes carrera)}
 
-estaEnamorade :: Carrera -> Carrera
-estaEnamorade carrera =
-     carrera { participantes = hacerTrucosSiEnamoradesEsta (publico carrera) (participantes carrera)}
+enamorar :: Carrera -> Carrera
+enamorar carrera =
+     carrera { participantes = realizarTrucosSiEnamoradesEsta (publico carrera) (participantes carrera)}
 
-hacerTrucosSiEnamoradesEsta :: Publico -> Participantes -> Participantes
-hacerTrucosSiEnamoradesEsta enamorades  = map (cambiarSiEstaEnamorade enamorades) 
+realizarTrucosSiEnamoradesEsta :: Publico -> Participantes -> Participantes
+realizarTrucosSiEnamoradesEsta enamorades  = map (cambiarSiEstaEnamorade enamorades) 
 
 cambiarSiEstaEnamorade :: Publico -> Auto -> Auto
-cambiarSiEstaEnamorade publico auto | any (==nombreEnamorade auto) publico = (trucoFavorito auto) auto
+cambiarSiEstaEnamorade publico auto | elem (nombreEnamorade auto) publico = (trucoFavorito auto) auto
                                     | otherwise = auto
 
 correrCarrera :: Carrera -> Carrera
@@ -193,15 +198,17 @@ autoGanador :: Carrera -> Auto
 autoGanador carrera = participanteConMasVelocidad (participantes carrera)
 
 participanteConMasVelocidad :: Participantes -> Auto
-participanteConMasVelocidad (x:xs) = foldl autoMasRapido x xs
+participanteConMasVelocidad = foldl1 autoMasRapido 
 
 autoMasRapido :: Auto -> Auto -> Auto 
 autoMasRapido auto1 auto2 | velocidad auto1 > velocidad auto2 = auto1
                           | otherwise = auto2
 
 
- {- Punto 6 no se puede porque 
- estariamos comparando infinitamente -}
+ {- Punto 6:
+        a) No. Porque para saber el ganador se debe compara todos los elementos de una lista.
+        b) Si. Porque no hace falta tener toda la lista para sacar el primer elemento: head listaInfinita
+        c) No. Porque siempre habrá otro auto con el cual comparar -}
 
 
  
